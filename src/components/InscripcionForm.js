@@ -44,7 +44,12 @@ export default function InscripcionForm() {
 
   const handleChange = (ev) => {
     const { name, value } = ev.target;
-    setForm((f) => ({ ...f, [name]: sanitize(value) }));
+      setForm((f) => ({
+        ...f,
+        [name]: name === 'message'
+          ? value.replace(/(--|\b(SELECT|INSERT|UPDATE|DELETE|DROP|ALTER|EXEC|UNION|XP_)\b)/gi, '').replace(/[<>]/g, '').slice(0, 1000)
+          : sanitize(value)
+      }));
     setErrors((er) => ({ ...er, [name]: undefined }));
   };
 
