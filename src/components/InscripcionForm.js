@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import emailjs from 'emailjs-com';
-import CONFIG from '../config';
 
 export default function InscripcionForm() {
   const t = useTranslations('form');
@@ -66,14 +65,14 @@ export default function InscripcionForm() {
     try {
       // 1) EmailJS
       await emailjs.send(
-        CONFIG.EMAILJS_SERVICE_ID,
-        CONFIG.EMAILJS_TEMPLATE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
         {
           timestamp: new Date().toISOString(),
           name: form.name, email: form.email, phone: form.phone,
           course: form.course, level: form.level, schedule: form.schedule, message: form.message
         },
-        CONFIG.EMAILJS_USER_ID
+        process.env.NEXT_PUBLIC_EMAILJS_USER_ID
       );
 
       // 2) SheetDB via API (oculto)
