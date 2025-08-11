@@ -4,7 +4,7 @@ export default function SeoHead({
   title = 'Al Toque — Spanish for Junior & Leaving Cert',
   description = 'Online Spanish courses with native teachers. Exam-focused. Free trial.',
   url = 'https://altoque.ie',
-  image = '/logo-altoque.jpg'
+  image = '/logo-altoque.png'
 }) {
   return (
     <Head>
@@ -19,7 +19,7 @@ export default function SeoHead({
       <meta name="twitter:title" content={title}/>
       <meta name="twitter:description" content={description}/>
       <meta name="twitter:image" content={image}/>
-      <link rel="icon" href="/favicon.ico"/>
+      <link rel="icon" href="/mano_sin_fondo.png"/>
     </Head>
   );
 }
