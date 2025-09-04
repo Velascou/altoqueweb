@@ -49,6 +49,8 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-6">
           <Link href="/#courses" className="text-slate-700 hover:text-slate-900">{t('courses')}</Link>
           <Link href="/#prices" className="text-slate-700 hover:text-slate-900">{t('prices')}</Link>
+          <Link href="/about" className="text-slate-700 hover:text-slate-900">{t('about.title')}</Link>
+          <Link href="/horarios" className="text-slate-700 hover:text-slate-900">{t('schedule')}</Link>
           <Link href="/test-nivel" className="text-slate-700 hover:text-slate-900">{t('test')}</Link>
           <Link
             href="/inscripcion"
@@ -75,9 +77,11 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden border-t border-slate-200 bg-white">
           <div className="mx-auto max-w-6xl px-4 py-3 grid gap-3">
-            <Link href="/#courses" onClick={() => setOpen(false)} className="block">Courses</Link>
-            <Link href="/#prices" onClick={() => setOpen(false)} className="block">Prices</Link>
-            <Link href="/test-nivel" onClick={() => setOpen(false)} className="block">Level Test</Link>
+            <Link href="/#courses" onClick={() => setOpen(false)} className="block">{t('courses')}</Link>
+            <Link href="/#prices" onClick={() => setOpen(false)} className="block">{t('prices')}</Link>
+            <Link href="/about" onClick={() => setOpen(false)} className="block">{t('about.title')}</Link>
+            <Link href="/horarios" onClick={() => setOpen(false)} className="block">{t('schedule')}</Link>
+            <Link href="/test-nivel" onClick={() => setOpen(false)} className="block">{t('test')}</Link>
             <Link
               href="/inscripcion"
               onClick={() => setOpen(false)}
