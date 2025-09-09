@@ -160,17 +160,21 @@
   "submit_err": "Error submitting the form, try again.",
   "success": "Your request has been sent. We’ll contact you soon.",
   "about": {
-    "title": "About us",
+    "title": "About me",
     "subtitle": "Spanish on point for Junior & Leaving Cert. Native teachers, exam-focused method.",
-    "mission_title": "Our mission",
-    "mission_copy": "Help Irish students succeed in Junior & Leaving Cert with a practical, motivating approach.",
-    "point_1": "Exam-focused lessons with real past papers",
-    "point_2": "Native teachers and clear pronunciation",
-    "point_3": "Flexible schedules and tailored plans",
+    "laia": "Laia García",
+    "laia_sub": "Founder & Head Teacher",
+    "background_copy_1": "I am a native Spanish teacher, with a Master’s degree in Teaching Spanish as a Foreign Language and years of experience teaching students of all ages: from children and teenagers to adults who want to perfect their Spanish for academic, professional or personal reasons.",
+    "background_copy_2": "Throughout my career, I have successfully prepared students for official exams in Ireland, such as the Leaving Certificate and the Junior Certificate, achieving effective results and real progress in their language skills.",
+    "method_title": "Our method",
+    "method_copy": "My online courses in small groups are designed so that every student receives the attention they need, in a supportive, dynamic and motivating environment. ",
+    "method_list_intro": "What you gain in my classes:",
+    "point_1": "Small groups: more participation, more practice and better individual follow-up.",
+    "point_2": "Active methodology: you will learn Spanish through debates, projects and real-life activities.",
+    "point_3": "Proven results: students gain confidence and achieve their goals.",
+    "method_list_outro": "Learning in a group is more dynamic, more affordable and more effective. Book your spot and start improving your Spanish with classes designed for you.",
     "team_title": "Our team",
-    "team_copy": "Experienced native teachers with a strong track record in exam preparation.",
-    "method_title": "Method & materials",
-    "method_copy": "Step-by-step curriculum aligned with the Irish syllabus, speaking practice, and targeted writing feedback."
+    "team_copy": "Experienced native teachers with a strong track record in exam preparation."
   },
   "schedule": "Schedule",
 
@@ -180,7 +184,12 @@
   "retry": "Retry (same model)",
   "try_again": "Try another model",
   "free_trial": "Book free trial",
-  "scroll_up": "Scroll up"
+  "scroll_up": "Scroll up",
+  "answered": "Answered",
+  "calendar_cta": "Quick booking links",
+  "calendar_note": "Pick a day and click a class time to prefill the booking form.",
+  "schedule_availability": "Schedule & Availability",
+  "schedule_note": "Check our calendar and use quick links to prefill your booking."
 
   
 }

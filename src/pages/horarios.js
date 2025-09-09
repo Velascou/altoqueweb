@@ -5,15 +5,26 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SeoHead from '../components/SeoHead';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export async function getStaticProps({ locale = 'en' }) {
   const l = locale || 'en';
+
+  // Carga segura (evita fallos con Turbopack y require)
   const load = async (code) => {
-    try { const m = await import(`../locales/${code}.json`); return m?.default ?? m; }
-    catch { return null; }
+    try {
+      const mod = await import(`../locales/${code}.json`);
+      return mod?.default ?? mod ?? null;   // <- soporta ambas formas
+    } catch {
+      return null;
+    }
   };
+
   const messages = (await load(l)) || (await load('en')) || {};
-  return { props: { messages, locale: l } };
+
+  return {
+    props: { messages, locale: l }
+  };
 }
 
 // ⚠️ Reemplaza por tu embed de Google Calendar (solo el valor de src)
@@ -43,6 +54,8 @@ export default function Horarios() {
   // toggle entre vistas: 'grid' | 'accordion'
   const [view, setView] = useState('grid');
   const [openDay, setOpenDay] = useState(null); // para el acordeón
+
+  const t = useTranslations();
 
   // Estado de carga/slots
   const [loading, setLoading] = useState(true);
@@ -82,21 +95,12 @@ export default function Horarios() {
       <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-10 space-y-10">
         <header className="text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900">
-            Schedule & Availability
+            {t('schedule_availability')}
           </h1>
           <p className="text-slate-600 mt-2">
-            Check our calendar and use quick links to prefill your booking.
+            {t('schedule_note')}
           </p>
         </header>
-
-        {/* Google Calendar embed */}
-        <section className="rounded-2xl border border-slate-200 overflow-hidden shadow-sm bg-white">
-          <iframe
-            src={CALENDAR_SRC}
-            className="w-full h-[680px]"
-            style={{ border: 0 }}
-          />
-        </section>
 
         {/* Toggle de vista */}
         <div className="flex justify-end">
@@ -137,9 +141,9 @@ export default function Horarios() {
             {view === 'grid' ? (
               /* Opción A: Grid semanal (5 columnas) */
               <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h2 className="text-xl font-bold mb-2">Quick booking links</h2>
+                <h2 className="text-xl font-bold mb-2">{t('calendar_cta')}</h2>
                 <p className="text-slate-600 mb-4">
-                  Pick a day and click a class time to prefill the booking form.
+                  {t('calendar_note')}
                 </p>
 
                 {/* Cabecera con los 5 días */}
@@ -164,7 +168,7 @@ export default function Horarios() {
                           href={toHref(day, time, course)}
                           className="block rounded-xl bg-rose-50 border border-rose-100 hover:bg-rose-100 transition p-3 shadow-sm"
                         >
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-col items-center text-center">
                             <span className="text-sm font-semibold text-rose-700">{time}</span>
                             <span className="text-xs text-slate-500">{course}</span>
                           </div>
@@ -234,6 +238,15 @@ export default function Horarios() {
             )}
           </>
         )}
+
+        {/* Google Calendar embed */}
+        <section className="rounded-2xl border border-slate-200 overflow-hidden shadow-sm bg-white">
+          <iframe
+            src={CALENDAR_SRC}
+            className="w-full h-[680px]"
+            style={{ border: 0 }}
+          />
+        </section>
 
         <div className="text-center">
           <Link
