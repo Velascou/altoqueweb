@@ -1,3 +1,4 @@
+// src/pages/test-nivel.js
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import Navbar from '../components/Navbar';
@@ -16,8 +17,6 @@ export async function getStaticProps({ locale = 'en' }) {
   return { props: { messages, locale: l } };
 }
 
-
-
 function normalizeStr(s) {
   return String(s || '')
     .toLowerCase()
@@ -25,14 +24,11 @@ function normalizeStr(s) {
     .replace(/\s+/g, ' ')
     .trim();
 }
-
 function toArray(v) {
   if (Array.isArray(v)) return v;
   if (v == null) return [];
-  // Permite "a|b|c", "a;b;c" o "a, b, c"
   return String(v).split(/[\|;,]/g).map(s => s.trim()).filter(Boolean);
 }
-
 function normalizeList(list) {
   return toArray(list).map(s =>
     String(s || '')
@@ -47,6 +43,7 @@ export default function TestNivel() {
   const t = useTranslations();
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
+  const [info, setInfo] = useState('');               // <— NUEVO
   const [questions, setQuestions] = useState([]);
   const [model, setModel] = useState(null);
   const [models, setModels] = useState([]);
@@ -55,26 +52,58 @@ export default function TestNivel() {
   const [score, setScore] = useState(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const modelParam = params.get('model');
-    const url = modelParam ? `/api/questions?model=${encodeURIComponent(modelParam)}` : '/api/questions';
+    async function loadQuestions() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const modelParam = params.get('model');
+        const url = modelParam ? `/api/questions?model=${encodeURIComponent(modelParam)}` : '/api/questions';
 
-    setLoading(true);
-    setFetchError('');
-    fetch(url)
-      .then(r => r.json())
-      .then(data => {
-        if (!data?.questions?.length) {
-          setFetchError('No questions available.');
-          setQuestions([]);
-        } else {
+        setLoading(true);
+        setFetchError('');
+        setInfo('');
+
+        const res = await fetch(url);
+        const data = await res.json().catch(() => ({}));
+
+        if (Array.isArray(data?.questions) && data.questions.length > 0) {
           setQuestions(data.questions);
           setModel(data.selectedModel || null);
           setModels(data.models || []);
+        } else {
+          // Fallback local
+          const local = await import('../locales/test.json');   // asegúrate de que este archivo existe
+          const list = local?.default?.questions || local?.questions || [];
+          if (list.length) {
+            setQuestions(list);
+            setModel(local?.default?.model || local?.model || 1);
+            setModels([local?.default?.model || local?.model || 1]);
+            //setInfo('Loaded local fallback questions.');        // <— info, no error
+          } else {
+            setFetchError('No questions available.');
+          }
         }
-      })
-      .catch(() => setFetchError('Could not load questions.'))
-      .finally(() => setLoading(false));
+      } catch (_err) {
+        // Si fetch peta, intentar fallback local
+        try {
+          const local = await import('../locales/test.json');
+          const list = local?.default?.questions || local?.questions || [];
+          if (list.length) {
+            setQuestions(list);
+            setModel(local?.default?.model || local?.model || 1);
+            setModels([local?.default?.model || local?.model || 1]);
+            //setInfo('Loaded local fallback questions.');        // <— info, no error
+          } else {
+            setFetchError('Could not load questions.');
+          }
+        } catch {
+          setFetchError('Could not load questions.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadQuestions();
   }, []);
 
   const onAnswer = (idx, value) => {
@@ -92,26 +121,25 @@ export default function TestNivel() {
   }, [score, questions.length]);
 
   const evaluate = () => {
-  let s = 0;
-  questions.forEach((q, i) => {
-    const user = answers[i];
-    if (user == null || String(user).trim() === '') return;
+    let s = 0;
+    questions.forEach((q, i) => {
+      const user = answers[i];
+      if (user == null || String(user).trim() === '') return;
 
-    const nUser = normalizeStr(user);
-    const okList = normalizeList(q.answer);   // soporta string o array
-    const accList = normalizeList(q.accept);  // soporta string (con | , ;) o array
-    const allValid = new Set([...okList, ...accList]);
+      const nUser = normalizeStr(user);
+      const okList = normalizeList(q.answer);
+      const accList = normalizeList(q.accept);
+      const allValid = new Set([...okList, ...accList]);
 
-    // Para cualquier tipo, si el user coincide con answer o con accept => correcto
-    if (allValid.has(nUser)) s++;
-  });
+      if (allValid.has(nUser)) s++;
+    });
 
-  setScore(s);
-  setTimeout(() => {
-    const el = document.getElementById('result');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 50);
-};
+    setScore(s);
+    setTimeout(() => {
+      const el = document.getElementById('result');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  };
 
   const reset = () => {
     setAnswers({});
@@ -119,10 +147,9 @@ export default function TestNivel() {
     setScore(null);
   };
 
-  // --- Barra de estado (respondidas / total) ---
   const answeredCount = useMemo(
     () =>
-      Object.entries(answers).reduce((acc, [idx, val]) => {
+      Object.entries(answers).reduce((acc, [_, val]) => {
         if (val !== undefined && val !== null && String(val).trim() !== '') acc++;
         return acc;
       }, 0),
@@ -139,13 +166,24 @@ export default function TestNivel() {
         <h1 className="text-3xl font-bold text-rose-700 mb-2">
           {t('placement_test')} {model ? `(Model ${model})` : ''}
         </h1>
-       
 
         {loading && <div className="p-6 bg-white rounded-xl shadow">{t('loading_questions')}</div>}
-        {fetchError && <div className="p-6 bg-white rounded-xl shadow text-rose-700">{fetchError}</div>}
 
-        {!loading && !fetchError && questions.length > 0 && score == null && (
-          <div className="space-y-6 pb-28">{/* padding-bottom para no tapar con la barra */}
+        {/* Mensaje informativo (no bloquea el render) */}
+        {!loading && info && (
+          <div className="p-4 mb-4 rounded-xl border border-amber-300 bg-amber-50 text-amber-800 text-sm">
+            {info}
+          </div>
+        )}
+
+        {/* Error solo si además no hay preguntas */}
+        {!loading && fetchError && questions.length === 0 && (
+          <div className="p-6 bg-white rounded-xl shadow text-rose-700">{fetchError}</div>
+        )}
+
+        {/* Renderiza preguntas aunque haya info o haya habido error previo, mientras haya preguntas */}
+        {!loading && questions.length > 0 && score == null && (
+          <div className="space-y-6 pb-28">
             {questions.map((q, idx) => (
               <div key={idx} className="bg-white rounded-xl shadow p-6">
                 <div className="flex items-start justify-between gap-4">
@@ -166,7 +204,7 @@ export default function TestNivel() {
 
                 {(q.type === 'options' || q.type === 'true_false') ? (
                   <div className="grid gap-2 sm:grid-cols-2 mt-4">
-                    {(q.options || []).map((opt, k) => (
+                    {(q.options && q.options.length ? q.options : ['True', 'False']).map((opt, k) => (
                       <label
                         key={k}
                         className={`border rounded px-3 py-2 cursor-pointer ${
@@ -193,11 +231,6 @@ export default function TestNivel() {
                       className="w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                       placeholder="Your answer…"
                     />
-                    {q.accept?.length ? (
-                      <p className="text-xs text-slate-400 mt-1">
-                        *(Variantes aceptadas configuradas)*
-                      </p>
-                    ) : null}
                   </div>
                 )}
               </div>
@@ -211,7 +244,10 @@ export default function TestNivel() {
               Score: {score}/{questions.length} ({Math.round((score/questions.length)*100)}%)
             </p>
             <p className="text-rose-700 font-semibold mb-4">
-              {t('recommended_level')} {grade}
+              {t('recommended_level')} {
+                ((pct) => pct<35?'A1':pct<55?'A2':pct<70?'B1':pct<85?'B2':'C1+')
+                (Math.round((score/questions.length)*100))
+              }
             </p>
 
             <div className="flex gap-3 justify-center">
@@ -234,7 +270,7 @@ export default function TestNivel() {
       <Footer />
 
       {/* Barra flotante de progreso */}
-      {!loading && !fetchError && questions.length > 0 && score == null && (
+      {!loading && questions.length > 0 && score == null && (
         <div
           className="fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur border-t border-slate-200"
           role="status"
@@ -243,7 +279,7 @@ export default function TestNivel() {
           <div className="mx-auto max-w-3xl px-4 py-3">
             <div className="flex items-center justify-between mb-2 text-sm">
               <span className="font-medium text-slate-700">
-                {answeredCount}/{total} {answeredCount === 1 ? 'respondida' : 'respondidas'}
+                {answeredCount}/{total} {t('answered')}
               </span>
               <span className="text-slate-500">{pct}%</span>
             </div>

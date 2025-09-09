@@ -164,17 +164,21 @@
   "submit_err": "Hubo un problema al enviar el formulario.",
   "success": "¡Solicitud enviada! Te contactaremos muy pronto.",
   "about": {
-    "title": "Sobre nosotros",
+    "title": "Sobre mí",
     "subtitle": "Spanish on point para Junior & Leaving Cert. Profes nativos y enfoque a examen.",
-    "mission_title": "Nuestra misión",
-    "mission_copy": "Acompañar a estudiantes en Irlanda a aprobar con seguridad y confianza.",
-    "point_1": "Lecciones enfocadas al examen y exámenes reales",
-    "point_2": "Profes nativos con pronunciación clara",
-    "point_3": "Horarios flexibles y planes a medida",
-    "team_title": "Nuestro equipo",
-    "team_copy": "Profes nativos con amplia experiencia en preparación de exámenes.",
-    "method_title": "Método y materiales",
-    "method_copy": "Programa alineado con el temario irlandés, práctica oral y feedback de escritura orientado a nota."
+    "laia": "Laia García",
+    "laia_sub": "Founder & Head Teacher",
+    "background_copy_1": "Soy profesora nativa de español, con un Máster en Enseñanza de Español como Lengua Extranjera y años de experiencia impartiendo clases a estudiantes de todas las edades: desde niños y adolescentes hasta adultos que desean perfeccionar el idioma por motivos académicos, profesionales o personales.",
+    "background_copy_2": "A lo largo de mi trayectoria he preparado con éxito a estudiantes para los exámenes oficiales en Irlanda, como el Leaving Certificate y el Junior Certificate, logrando resultados efectivos y un progreso real en sus competencias lingüísticas.",
+    "method_title": "Nuestro método",
+    "method_copy": "Mis cursos online en grupos reducidos están diseñados para que cada estudiante reciba la atención que necesita, en un ambiente cercano, dinámico y motivador. ",
+    "method_list_intro": "Ventajas de mis clases:",
+    "point_1": "Grupos pequeños: mayor participación, más práctica y mejor seguimiento individual.",
+    "point_2": "Metodología activa: aprenderás español a través de debates, proyectos y actividades reales.",
+    "point_3": "Resultados comprobados: los estudiantes avanzan con confianza y alcanzan sus objetivos.",
+    "method_list_outro": "Aprender en grupo es más dinámico, más económico y más efectivo. Reserva tu plaza y comienza a mejorar tu español con clases diseñadas para ti.",
+    "team_title": "Our team",
+    "team_copy": "Experienced native teachers with a strong track record in exam preparation."
   },
   "schedule": "Horario",
 
@@ -184,6 +188,11 @@
   "retry": "Reintentar (mismo modelo)",
   "try_again": "Probar otro modelo",
   "free_trial": "Reserva clase gratis",
-  "scroll_up": "Subir arriba"
+  "scroll_up": "Subir arriba",
+  "answered": "Respondido",
+  "calendar_cta": "Enlaces rápidos de reserva",
+  "calendar_note": "Elige un día y haz clic en una hora para rellenar el formulario de reserva.",
+  "schedule_availability": "Horario y disponibilidad",
+  "schedule_note": "Consulta nuestro calendario y utiliza los enlaces rápidos para rellenar tu reserva."
 
 }
